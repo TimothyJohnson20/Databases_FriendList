@@ -8,4 +8,5 @@
     <string name="email">Email</string>
     <string name="name">Name</string>
     <string name="title_activity_friend_list">FriendListActivity</string>
+    <string name="title_activity_friend_detail">FriendDetailActivity</string>
 </resources>
