@@ -14,7 +14,7 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:text="Name"
-        app:layout_constraintBottom_toTopOf="@+id/textView_friendDetail_clumsy"
+        app:layout_constraintBottom_toTopOf="@+id/seekBar_friendDetail_Clumsiness"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -33,15 +33,13 @@
 
     <SeekBar
         android:id="@+id/seekBar_friendDetail_Clumsiness"
-        android:layout_width="0dp"
+        android:layout_width="211dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="100dp"
-        android:layout_marginEnd="100dp"
         app:layout_constraintBottom_toTopOf="@+id/switch_friendDetail_isAwesome"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView_friendDetail_clumsy" />
+        app:layout_constraintTop_toBottomOf="@+id/editText_friendDetail_name" />
 
     <Switch
         android:id="@+id/switch_friendDetail_isAwesome"
@@ -67,11 +65,9 @@
 
     <SeekBar
         android:id="@+id/seekBar_friendDetail_gymFrequency"
-        android:layout_width="0dp"
+        android:layout_width="211dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="100dp"
-        android:layout_marginEnd="100dp"
-        app:layout_constraintBottom_toTopOf="@+id/textView_friendDetail_trust"
+        app:layout_constraintBottom_toTopOf="@+id/ratingBar_friendDetail_trustRating"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -96,7 +92,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView_friendDetail_trust" />
+        app:layout_constraintTop_toBottomOf="@+id/seekBar_friendDetail_gymFrequency" />
 
     <TextView
         android:id="@+id/textView_friendDetail_moneyOwed"
@@ -116,9 +112,21 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:text="Money Owed: "
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/button_friendDetail_create"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView_friendDetail_moneyOwed" />
+
+    <Button
+        android:id="@+id/button_friendDetail_create"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Create"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editText_friendDetail_moneyOwed" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

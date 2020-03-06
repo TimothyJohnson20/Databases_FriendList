@@ -31,17 +31,12 @@ public class RegistrationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true); // show the back button
-
         wireWidgets();
         setListeners();
-
-        //  Preload the username    (get the username from the intent)
         String username = getIntent().getStringExtra(LoginActivity.EXTRA_USERNAME);
         editTextUsername.setText(username);
     }
-
     private void setListeners() {
         buttonCreateAccount.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,16 +45,7 @@ public class RegistrationActivity extends AppCompatActivity {
             }
         });
     }
-
     private void createBackendlessAccount() {
-        // TODO update to make this work with startActivityForResult
-
-        // create account on backendless
-
-        // finish the activity
-
-        // do not forget to call Backendless.initApp when your app initializes
-
         BackendlessUser user = new BackendlessUser();
         user.setProperty( "email", editTextEmail.getText().toString());
         user.setProperty("name", editTextName.getText().toString());
@@ -85,12 +71,10 @@ public class RegistrationActivity extends AppCompatActivity {
                             setResult(RESULT_OK, registrationCreateIntent);
                             finish();
                         }
-
                         public void handleFault(BackendlessFault fault) {
                             // an error has occurred, the error code can be retrieved with fault.getCode()
 
                             Toast.makeText(RegistrationActivity.this, fault.getMessage(), Toast.LENGTH_SHORT).show();
-
                         }
                     });
                 }
@@ -106,9 +90,6 @@ public class RegistrationActivity extends AppCompatActivity {
             Toast.makeText(this, "Please enter a Name, Email, Username, and Password", Toast.LENGTH_SHORT).show();
         }
     }
-
-
-
     private void wireWidgets() {
         editTextUsername = findViewById(R.id.edit_text_create_account_username);
         editTextPassword = findViewById(R.id.edit_text_create_account_password);
