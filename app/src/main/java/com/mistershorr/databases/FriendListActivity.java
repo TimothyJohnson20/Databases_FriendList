@@ -1,5 +1,6 @@
 package com.mistershorr.databases;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -12,7 +13,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -40,6 +43,10 @@ public class FriendListActivity extends AppCompatActivity {
         setListeners();
         //  Search only for friends that have ownerIds that match the user's objectId
 
+    }
+    @Override
+    protected void onStart() {
+        super.onStart();
         String userId = Backendless.UserService.CurrentUser().getObjectId();
         String whereClause = "ownerId = '" + userId + "'";
 
@@ -70,12 +77,9 @@ public class FriendListActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent newFriend = new Intent(FriendListActivity.this, FriendDetailActivity.class);
                 startActivity(newFriend);
-                wireWidgets();
             }
         });
-
-
-
+        registerForContextMenu(friendsListView);
     }
 
     public void wireWidgets(){
@@ -91,14 +95,37 @@ public class FriendListActivity extends AppCompatActivity {
                 Intent friendIntent = new Intent(FriendListActivity.this, FriendDetailActivity.class);
                 friendIntent.putExtra(FRIEND, clickedFriend);
                 startActivity(friendIntent);
-                finish();
+            }
+        });
+
+        friendsListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Friend clickedFriend = friendsList.get(i);
+                return false;
             }
         });
     }
 
-    public void newFriend(Friend friend){
-        friendsList.add(friend);
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        menu.setHeaderTitle("Context Menu");
+        menu.add(0, v.getId(), 0, "Upload");
+        menu.add(0, v.getId(), 0, "Search");
     }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        if (item.getTitle() == "Save") {
+            // do your coding
+        }
+        else {
+            return  false;
+        }
+        return true;
+    }
+
 
     private class FriendAdapter extends ArrayAdapter<Friend> {
         private List<Friend> friendList;
@@ -123,7 +150,5 @@ public class FriendListActivity extends AppCompatActivity {
             return convertView;
         }
     }
-
-
 
 }

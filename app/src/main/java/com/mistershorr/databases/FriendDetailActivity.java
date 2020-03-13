@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.media.Rating;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -40,7 +41,8 @@ public class FriendDetailActivity extends AppCompatActivity {
     private boolean newIsAwesome;
     private int newGymFrequency;
     private int newTrust;
-    private int newMoneyOwed;
+    private double newMoneyOwed;
+    private String tempMoneyOwed;
     private Friend friend;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,29 +55,20 @@ public class FriendDetailActivity extends AppCompatActivity {
         friend = lastIntent.getParcelableExtra(FriendListActivity.FRIEND);
         if(friend == null){
             friend = new Friend();
-//            clumsiness.setProgress(0);
-//            isAwesome.setChecked(false);
-//            gymFrequency.setProgress(0);
-//            trustRating.setNumStars(0);
-//            moneyOwed.setText("" + 0);
+
         }
         else{
             name.setText(friend.getName());
             clumsiness.setProgress(friend.getClumsiness());
             isAwesome.setChecked(friend.isAwesome());
             gymFrequency.setProgress(((int) friend.getGymFrequency()));
-            trustRating.setNumStars(friend.getTrustworthiness());
+            trustRating.setRating(friend.getTrustworthiness());
             moneyOwed.setText("" + friend.getMoneyOwed());
         }
-
-
         clumsinessText.setText("Clumsiness: ");
         gymFrequencyText.setText("Gym Frequency: ");
         trustText.setText("Trust Rating: ");
-
-
     }
-
     private void wireWidgets(){
         name = findViewById(R.id.editText_friendDetail_name);
         clumsinessText = findViewById(R.id.textView_friendDetail_clumsy);
@@ -92,23 +85,19 @@ public class FriendDetailActivity extends AppCompatActivity {
         clumsiness.setKeyProgressIncrement(1);
         gymFrequency.setKeyProgressIncrement(1);
         gymFrequency.setMax(7);
-
     }
-
     private void setListeners(){
         finishedCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 newName = name.getText().toString();
                 newClumsiness = clumsiness.getProgress();
-                if (isAwesome.isChecked()){
-                    newIsAwesome = true;
-                }
-                else{
-                    newIsAwesome = false;
-                }
+                newIsAwesome = isAwesome.isChecked();
                 newGymFrequency = gymFrequency.getProgress();
-                newTrust = trustRating.getNumStars();
+                newTrust = (int)trustRating.getRating();
+                tempMoneyOwed = moneyOwed.getText().toString();
+                newMoneyOwed = Double.parseDouble(tempMoneyOwed);
+                newClumsiness = clumsiness.getProgress();
 
                 friend.setName(newName);
                 friend.setClumsiness(newClumsiness);
@@ -116,12 +105,12 @@ public class FriendDetailActivity extends AppCompatActivity {
                 friend.setGymFrequency(newGymFrequency);
                 friend.setTrustworthiness(newTrust);
                 friend.setMoneyOwed(newMoneyOwed);
+
                 // make a backendless call to create a new object on the server
                 Backendless.Persistence.save( friend, new AsyncCallback<Friend>() {
                     public void handleResponse( Friend response )
                     {
-                        Intent newFriendIntent = new Intent(FriendDetailActivity.this, FriendListActivity.class);
-                        startActivity(newFriendIntent);
+                        finish();
                     }
 
                     public void handleFault( BackendlessFault fault )
@@ -129,11 +118,8 @@ public class FriendDetailActivity extends AppCompatActivity {
                         Toast.makeText(FriendDetailActivity.this, fault.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
-
             }
         });
 
     }
-
-
 }
