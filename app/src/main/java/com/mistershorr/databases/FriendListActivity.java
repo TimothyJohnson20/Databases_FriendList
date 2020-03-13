@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,7 +63,7 @@ public class FriendListActivity extends AppCompatActivity {
                 //  TODO    when a friend is clucked, it opens the detail activity that loads the info
                 friendsList = foundFriends;
 
-                FriendAdapter friendAdapter = new FriendAdapter(foundFriends);
+                friendAdapter = new FriendAdapter(foundFriends);
                 friendsListView.setAdapter(friendAdapter);
             }
             @Override
@@ -98,34 +99,50 @@ public class FriendListActivity extends AppCompatActivity {
             }
         });
 
-        friendsListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Friend clickedFriend = friendsList.get(i);
-                return false;
+//        friendsListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+//            @Override
+//            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+//                Friend clickedFriend = friendsList.get(i);
+//                onContextItemSelected();
+//            }
+//        });
+    }
+
+    private void deleteFriend(Friend friend){
+        Backendless.Persistence.of(Friend.class).remove(friend,
+        new AsyncCallback<Long>() {
+            public void handleResponse(Long response){
+                Toast.makeText(FriendListActivity.this, "Friend Removed", Toast.LENGTH_SHORT).show();
+            }
+            public void handleFault(BackendlessFault fault){
+                Toast.makeText(FriendListActivity.this, "LMAO", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+    public void onCreateContextMenu(ContextMenu menu, View v,
+                                    ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
-        menu.setHeaderTitle("Context Menu");
-        menu.add(0, v.getId(), 0, "Upload");
-        menu.add(0, v.getId(), 0, "Search");
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menus, menu);
     }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        if (item.getTitle() == "Save") {
-            // do your coding
-        }
-        else {
-            return  false;
-        }
-        return true;
-    }
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        switch (item.getItemId()) {
+            case R.id.Item_menu_delete:
+                Friend friend = friendsList.get(info.position);
+                deleteFriend(friend);
+                friendsList.remove(info.position);
+                friendAdapter.notifyDataSetChanged();
+                return true;
 
+            default:
+                return super.onContextItemSelected(item);
+        }
+    }
 
     private class FriendAdapter extends ArrayAdapter<Friend> {
         private List<Friend> friendList;
